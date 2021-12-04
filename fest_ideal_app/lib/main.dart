@@ -3,10 +3,16 @@
 // found in the LICENSE file.
 
 import 'package:fest_ideal_app/home_page.dart';
-import 'package:fest_ideal_app/map_page.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
+import 'admin_page.dart';
+
+Future<void> main() async {
+  await dotenv.load();
+
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -17,7 +23,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/': (context) => const HomePage(),
-        '/map': (context) => const MapPage(),
+        '/admin': (context) => const AdminPage(),
       },
     );
   }

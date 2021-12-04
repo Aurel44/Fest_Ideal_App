@@ -1,8 +1,9 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+// ignore_for_file: avoid_print
 
-import 'Models/band.dart';
+import 'package:fest_ideal_app/programme_page.dart';
+import 'package:flutter/material.dart';
+import 'login_page.dart';
+import 'map_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,67 +13,41 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController tecMessage = TextEditingController();
+  int _selectedIndex = 0;
+  PageController pageController = PageController();
 
-  List<Band> listeBands = List.empty();
-
-  @override
-  void initState() {
-    super.initState();
-    _getBands();
+  void onTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    pageController.animateToPage(index,
+        duration: const Duration(milliseconds: 1000), curve: Curves.easeIn);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Demo Liste")),
-      body: Column(
-        children: [_buildListView()],
+      appBar: AppBar(
+        title: const Text("Ze Fest'Ideal"),
+        backgroundColor: Colors.green[800],
+      ),
+      body: PageView(controller: pageController, children: const [
+        ProgrammePage(),
+        MapPage(),
+        LoginPage(),
+      ]),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'map'),
+          BottomNavigationBarItem(icon: Icon(Icons.login), label: 'login')
+        ],
+        currentIndex: _selectedIndex,
+        backgroundColor: Colors.green[800],
+        selectedItemColor: Colors.yellow[800],
+        unselectedItemColor: Colors.white,
+        onTap: onTapped,
       ),
     );
-  }
-
-  Expanded _buildListView() {
-    return Expanded(
-      child: ListView.separated(
-        itemCount: listeBands.length,
-        separatorBuilder: (context, index) => const Divider(),
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(listeBands[index].name),
-              ],
-            ),
-            subtitle: Text(
-              listeBands[index].musicstyle,
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  _getBands() async {
-    var url = 'http://10.0.2.2:3000/api/bands';
-    var jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTliZjQ3MzAzZGU4ZWEwYTkwNzk3MjEiLCJpYXQiOjE2Mzc2MTMyMTV9.qa8TxbyrgFWM6W48av0VTHItW5kGcPBjaG_jAGNW5iI";
-    var responseBands =
-        await http.get(Uri.parse(url), headers: <String, String>{"auth-token": "" + jwt});
-    if (responseBands.statusCode == 200) {
-      print("hello World");
-      Iterable mapBands = jsonDecode(responseBands.body);
-      listeBands = mapBands.map((i) => Band.fromJson(i)).toList();
-      _reloadListView(listeBands);
-    } else {
-      print("Pas bon..");
-      print(responseBands.statusCode);
-    }
-  }
-
-  _reloadListView(List<Band> bands) {
-    setState(() {
-      listeBands = bands;
-    });
   }
 }
