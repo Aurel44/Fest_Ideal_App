@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'admin_homepage.dart';
 import 'bands_page.dart';
+import 'logout.dart';
 import 'scene_page.dart';
 
 class AdminPage extends StatefulWidget {
@@ -30,19 +31,22 @@ class _AdminPageState extends State<AdminPage> {
         backgroundColor: Colors.green[800],
       ),
       body: PageView(controller: adminPageController, children: const [
+        AdminHomepage(),
         BandsPage(),
-        ScenePage()
+        ScenePage(),
+        LogOut(),
       ]),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'group'),
-          BottomNavigationBarItem(icon: Icon(Icons.place), label: 'scene'),
-          BottomNavigationBarItem(icon: Icon(Icons.logout), label: 'logout')
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Group'),
+          BottomNavigationBarItem(icon: Icon(Icons.place), label: 'Scene'),
+          BottomNavigationBarItem(icon: Icon(Icons.logout), label: 'Logout')
         ],
         currentIndex: _selectedIndex,
-        backgroundColor: Colors.green[800],
-        selectedItemColor: Colors.yellow[800],
-        unselectedItemColor: Colors.white,
+        backgroundColor: Colors.green[700],
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey,
         onTap: onTappedAdmin,
       ),
     );

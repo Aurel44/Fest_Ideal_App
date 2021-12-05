@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:io';
-import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginPage extends StatefulWidget {
@@ -62,19 +61,19 @@ class _LoginPageState extends State<LoginPage> {
 
   void _onLogin() async {
     //Récupération des champs
-    String email = tecEmail.text;
-    String password = tecPassword.text;
+    String email = tecEmail.text.toString();
+    String password = tecPassword.text.toString();
 
+
+//Appel de la variable d'envirronnement
+    var url = (dotenv.env['API_URL']).toString() + 'user/login';
     //Préparation de la requête à énvoyer au serveur
     try {
-      var responseRegister = await http.post(
-          Uri.parse((dotenv.env['API_URL']).toString() + 'user/login'),
-          body: {
-            "email": email,
-            "password": password,
-          });
-      print(email);
-      print(password);
+      var responseRegister = await http
+          .post(Uri.parse(url), body: {
+        "email": email,
+        "password": password
+      });
       if (responseRegister.statusCode == 200) {
         //Informer l'utilisateur du succès de la requête
 
@@ -85,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
         //Clear TextField
         tecEmail.clear();
         tecPassword.clear();
-        _onLoginSuccess(jsonDecode(responseRegister.body)["auth-token"]);
+        _onLoginSuccess(responseRegister.body);
       } else if (responseRegister.statusCode > 0) {
         //Si le serveur répond autre chose que 200 alors on affiche le status
         // ignore: unnecessary_new

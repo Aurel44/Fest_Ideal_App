@@ -32,15 +32,15 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.green[800],
       ),
       body: PageView(controller: pageController, children: const [
-        ProgrammePage(),
         MapPage(),
+        ProgrammePage(),
         LoginPage(),
       ]),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'map'),
-          BottomNavigationBarItem(icon: Icon(Icons.login), label: 'login')
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Programme'),
+          BottomNavigationBarItem(icon: Icon(Icons.login), label: 'Login')
         ],
         currentIndex: _selectedIndex,
         backgroundColor: Colors.green[800],

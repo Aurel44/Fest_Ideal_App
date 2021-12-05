@@ -27,12 +27,10 @@ class _ProgrammePageState extends State<ProgrammePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(40.0),
-          child: Column(
-            children: [_buildListView()],
-          ),
+      body: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          children: [_buildListView()],
         ),
       ),
     );
@@ -64,28 +62,32 @@ class _ProgrammePageState extends State<ProgrammePage> {
   }
 
   _getBands() async {
-    print(dotenv.env['API_URL']);
+    //Appel de la variable d'envirronnement
     var url = (dotenv.env['API_URL']).toString() + 'bands';
-    print("hello World1");
+    //Stockage du TOKEN
     var jwt = dotenv.env['JWT_TOKEN_USER'];
+    //vérification du TOKEN
     if (jwt != null) {
-      print("hello World2");
+      //Appel API
       var responseBands = await http.get(Uri.parse(url),
           headers: <String, String>{"auth-token": "" + jwt});
+      //Affichage de la liste des groupes    
       if (responseBands.statusCode == 200) {
-        print("hello World");
         Iterable mapBands = jsonDecode(responseBands.body);
         listeBands = mapBands.map((i) => Band.fromJson(i)).toList();
         _reloadListView(listeBands);
       } else {
+        //En cas d'erreur
         print("Pas bon..");
         print(responseBands.statusCode);
       }
     } else {
+      //Erreur de TOKEN
       print("pas de jwt");
     }
   }
 
+ //Rafraichissemnt de la liste des groupes
   _reloadListView(List<Band> bands) {
     setState(() {
       listeBands = bands;
